@@ -36,7 +36,7 @@ def cmp(r1,r2):
 
 def hlt():
     ans = disc_isa["hlt"]["opcode"]+"00000000000"
-    return ans
+    return ans 
 
 
 
