@@ -18,7 +18,7 @@ def xor(r1,r2,r3):
     ans = disc_isa["xor"]["opcode"]+"00"+disc_reg[r1]+disc_reg[r2]+disc_reg[r3]
     return ans
 
-def or1(r1,r2,r3):
+def or_(r1,r2,r3):
     ans = disc_isa["or"]["opcode"]+"00"+disc_reg[r1]+disc_reg[r2]+disc_reg[r3]
     return ans
 
@@ -38,13 +38,60 @@ def hlt():
     ans = disc_isa["hlt"]["opcode"]+"00000000000"
     return ans 
 
+def validity_of_instruction(input_instruction,list_of_instructions):
+    flag = True
+    for instruction_name in input_instruction:
+        if instruction_name not in list_of_instructions:
+            flag = False
+            break
+    return flag
+
+def validity_of_registers(input_register,list_of_registers):
+    flag = True
+    for register_name in input_register:
+        if register_name not in list_of_registers:
+            flag = False
+            break
+    return flag
+
+def validity_of_variables(input_memory,list_of_variables):
+    flag = True
+    for variable in input_memory:
+        if variable not in list_of_variables:
+            flag = False
+            break
+    return flag
+
+def correct_usage_of_halt(input_instruction):
+    occurence_of_halt = input_instruction.count("hlt")
+    index_of_halt = input_instruction.index("hlt")
+    last_index = len(input_instruction) - 1
+
+    if occurence_of_halt == 1 and index_of_halt == last_index:
+        return True
+    else:
+        return False
+
+def checking_length_of_immediate(immediate):
+    if (len(immediate) == 7):
+        return True
+    else:
+        return False
+
+def checking_variable_declared_starting(line_when_variable_added):
+    if sum(line_when_variable_added) == int(len(line_when_variable_added)*(len(line_when_variable_added) + 1)/2):
+        return True
+    else:
+        return False
+
+
 disc_reg = {"R0" : "000","R1" : "001", "R2" : "010" , "R3" : "011" , "R4" : "100" , "R5" : "101" , "R6" :"110", "FLAGS" : "111"}
 
 disc_isa = {
         "add" : {"opcode" : "00000", "type" : "a"},
         "sub" : {"opcode" : "00001", "type" : "a"},
-        "mov1" : {"opcode" : "00010", "type" : "b"},
-        "mov2" : {"opcode" : "00011", "type" : "c"},
+        "movi" : {"opcode" : "00010", "type" : "b"},
+        "movr" : {"opcode" : "00011", "type" : "c"},
         "ld" : {"opcode" : "00100", "type" : "d"},
         "st" : {"opcode" : "00101", "type" : "d"},
         "mul" : {"opcode" : "00110", "type" : "a"},
@@ -62,12 +109,28 @@ disc_isa = {
         "je" : {"opcode" : "11111", "type" : "e"},
         "hlt" : {"opcode" : "11010", "type" : "f"}}
 
-f = open("instruction.txt","r")
+list_of_instructions = list(disc_isa.keys()) #Code to create a list which contains all the instructions 
+list_of_instructions.remove("movi")          #of the isa
+list_of_instructions.remove("movr")
+list_of_instructions.append("mov")
+
+list_of_registers = list(disc_reg.keys()) #Code to create a list which contains all the name of the 
+list_of_registers.remove("FLAGS")         #registers
+
+
+
+f = open("instruction.txt","r")             #reads data from the input file
 data = f.readlines()
 f.close()
 
 for counter in range(len(data)):
     data[counter]=data[counter].rstrip()
-    data[counter] = data[counter].split()
+    data[counter] = data[counter].split()  #ends here
 
+list_of_variables = []                              # makes a list of the name of the variables
+line_when_variable_added = []                       # and the line when they are declared
+for counter in range(len(data)):
+    if data[counter][0] == "var":
+        list_of_variables.append(data[counter][1])
+        line_when_variable_added.append(counter+1)
         
