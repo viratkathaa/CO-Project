@@ -5,6 +5,41 @@ def add(r1,r2,r3):
 def sub(r1,r2,r3):
     ans = disc_isa["sub"]["opcode"]+"00"+disc_reg[r1]+disc_reg[r2]+disc_reg[r3]
     return ans
+def mov(r1,r2,flg):
+    if flg:
+        ans =  disc_isa["mov1"]["opcode"]+"0"+disc_reg[r1] 
+        r2 = str(bin(int(r2[1:])))[2:]
+        if (len(r2) != 8):
+            for i in range (0,8-len(r2),1):
+                ans +="0"
+        ans += r2
+    else:
+        ans =  disc_isa["mov2"]["opcode"]+"00000"+disc_reg[r1]+disc_reg[r2]
+    return ans
+
+def ld(r1,mem_add):
+    ans = disc_isa["ld"]["opcode"]+"0"+disc_reg[r1]+mem_add
+    return ans
+
+def st(r1,mem_add):
+    ans = disc_isa["st"]["opcode"]+disc_reg[r1]+mem_add
+    return ans
+
+def rs(r1,r2):
+    ans = disc_isa["rs"]["opcode"]+"0"+disc_reg[r1]
+    r2 = str(bin(int(r2[1:])))[2:]
+    if (len(r2) != 8):
+        for i in range (0,8-len(r2),1):
+            ans += "0"
+    ans += r2
+
+def ls(r1,r2):
+    ans = disc_isa["ls"]["opcode"]+"0"+disc_reg[r1]
+    r2 = str(bin(int(r2[1:])))[2:]
+    if (len(r2) != 8):
+        for i in range (0,8-len(r2),1):
+            ans += "0"
+    ans += r2
 
 def mul(r1,r2,r3):
     ans = disc_isa["mul"]["opcode"]+"00"+disc_reg[r1]+disc_reg[r2]+disc_reg[r3]
